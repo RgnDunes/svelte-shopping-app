@@ -5,7 +5,6 @@
 
   let product = {
     title: 'APPLE iPhone 14 Pro Max (Silver, 1 TB)',
-    price: 2,
     description: `Razorpay provides an end-to-end online payments solution. We accept and validate Internet payments via Credit Card, Debit Card, Net-Banking, UPI and popular Wallets from the end customers in real-time. 
       Ut non aliqua dolore ut anim enim. Aliquip enim tempor amet fugiat veniam reprehenderit magna aliquip laborum laboris officia eiusmod. Ipsum irure quis mollit velit tempor culpa mollit irure nisi consectetur nisi consequat.`,
     images: [
@@ -20,14 +19,15 @@
     },
   };
 
-  const { title, price, description, images, rating } = product;
+  let price = '2';
+  const { title, description, images, rating } = product;
   let loading = false;
   let activeImage = images[0];
   window.scrollTo(0, 0);
 
   const handlePayment = () => {
     loading = true;
-    initiatePayment(product.price, false)
+    initiatePayment(price, false)
       .catch((err) => console.log('error in 1st api=', err))
       .finally(() => (loading = false));
   };
@@ -56,7 +56,11 @@
 
     <div class="info-box">
       <h3 class="title">{title}</h3>
-      <h1 class="price">RM {price}</h1>
+      <div class="price">
+        <p class="price-text">
+          RM <input class="price-text" bind:value={price} />
+        </p>
+      </div>
       <div class="d-flex rating">
         {#each new Array(rating.rate).fill('') as item}
           <img src="https://razorpay.com/images/demo/star.svg" alt="Star" />
@@ -98,6 +102,10 @@
   .price {
     /* font-family: 'Lato-Black'; */
     margin-bottom: 12px;
+  }
+
+  .price-text {
+    font-size: 28px;
   }
 
   .d-flex {
