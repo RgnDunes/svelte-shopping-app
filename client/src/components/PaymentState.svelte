@@ -10,30 +10,30 @@
     const { RAZORPAY_KEY_ID, API_ENDPOINT, BASE_PATH } = env;
 
     const orderPayload = {
+      currency: 'MYR',
       amount: price,
     };
     if (false) {
       orderPayload.line_items_total = price;
     }
-    // const orderData = await fetch(`${API_ENDPOINT}/payment/orders`, {
-    //   method: 'POST',
-    //   headers: {
-    //     Accept: 'application/json',
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify(orderPayload),
-    // }).then((res) => res.json());
 
-    // const { amount, id } = orderData;
+    const orderData = await fetch(`${API_ENDPOINT}/payment/orders`, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(orderPayload),
+    }).then((res) => res.json());
+
+    const { amount, id } = orderData;
 
     const options = {
-      key: 'rzp_live_fQOafVJoJqscJ6',
-      amount: `${price * 100}`,
       currency: 'MYR',
       name: 'Digital Dukaan',
       description: 'Test Transaction',
       image: `${BASE_PATH ? `/${BASE_PATH}` : ''}/assets/images/logo.svg`,
-      // order_id: id,
+      order_id: id,
       theme: {
         color: '#e8af01',
         bg_theme: selectedTheme,
