@@ -18,7 +18,7 @@
 
   const handlePayment = (isOneCC) => {
     loading = true;
-    initiatePayment(price, isOneCC, selectedTheme)
+    initiatePayment({ price, isOneCC, selectedTheme })
       .catch((err) => console.log('error in 1st api=', err))
       .finally(() => (loading = false));
   };

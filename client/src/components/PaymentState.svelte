@@ -5,35 +5,26 @@
   import successIcon from '../assets/images/success.svg';
   export const paymentState = writable({});
 
-  export const initiatePayment = async (price, isOneCC, selectedTheme) => {
-    const { env } = process;
-    const { RAZORPAY_KEY_ID, API_ENDPOINT, BASE_PATH } = env;
+  const { env } = process;
+  const { RAZORPAY_KEY_ID, API_ENDPOINT, BASE_PATH } = env;
 
-    const orderPayload = {
-      currency: 'MYR',
-      amount: price,
-    };
-    if (false) {
-      orderPayload.line_items_total = price;
-    }
-
-    const orderData = await fetch(`${API_ENDPOINT}/payment/orders`, {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(orderPayload),
-    }).then((res) => res.json());
-
-    const { amount, id } = orderData;
+  export const initiatePayment = async ({
+    price,
+    isOneCC = false,
+    selectedTheme = '',
+    createOrder = true,
+    key = RAZORPAY_KEY_ID,
+    extraOptions = {},
+  }) => {
+    // if (false) {
+    //   orderPayload.line_items_total = price;
+    // }
 
     const options = {
       currency: 'MYR',
       name: 'Digital Dukaan',
       description: 'Test Transaction',
       image: `${BASE_PATH ? `/${BASE_PATH}` : ''}/assets/images/logo.svg`,
-      order_id: id,
       theme: {
         color: '#e8af01',
         bg_theme: selectedTheme,
@@ -63,7 +54,30 @@
           body: JSON.stringify(data),
         });
       },
+      ...extraOptions,
     };
+
+    if (createOrder) {
+      const orderPayload = {
+        currency: 'MYR',
+        amount: price,
+      };
+      const orderData = await fetch(`${API_ENDPOINT}/payment/orders`, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(orderPayload),
+      }).then((res) => res.json());
+
+      const { amount, id } = orderData;
+
+      options.order_id = id;
+    } else {
+      options.key = key;
+      options.amount = price * 100;
+    }
 
     const rzp1 = new window.Razorpay(options);
     rzp1.on('payment.failed', function (error) {

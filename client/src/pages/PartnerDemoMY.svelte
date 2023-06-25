@@ -20,6 +20,9 @@
   };
 
   let price = '2';
+  let key = 'rzp_test_partner_LU6BMMDxRdzDOx';
+  let subMerchantId = 'KkAgsrzTuF8NXp';
+
   const { title, description, images, rating } = product;
   let loading = false;
   let activeImage = images[0];
@@ -27,7 +30,10 @@
 
   const handlePayment = () => {
     loading = true;
-    initiatePayment({ price, createOrder: false })
+    const extraOptions = {
+      account_id: subMerchantId,
+    };
+    initiatePayment({ price: +price * 100, createOrder: false, key, extraOptions })
       .catch((err) => console.log('error in 1st api=', err))
       .finally(() => (loading = false));
   };
@@ -67,12 +73,22 @@
         {/each}
       </div>
       <p class="desc">{description}</p>
+      <select bind:value={key}>
+        <option value="rzp_test_partner_LU6BMMDxRdzDOx">Test Mode</option>
+        <option value="rzp_live_partner_LU6BMnu91CtbsZ">Live Mode</option>
+      </select>
+      <div class="sub-merchant-id">
+        <span>Sub Merchant ID</span>
+        <input bind:value={subMerchantId} />
+      </div>
       <div class="btn-container">
         {#if loading}
           <div class="loader" />
         {:else}
-          <button class="buy-btn" on:click={handlePayment}> Buy now </button>
-          <!-- <magic-checkout-btn on:click={handlePayment}><span slot="title">Buy now</span></magic-checkout-btn> -->
+          <!-- <div class="magic-btn-container" on:click={() => handlePayment(true)}>
+            <div>Buy now</div>
+          </div> -->
+          <magic-checkout-btn on:click={handlePayment}><span slot="title">Buy now</span></magic-checkout-btn>
         {/if}
       </div>
     </div>
@@ -95,16 +111,6 @@
 
   .title {
     margin-bottom: 4px;
-  }
-
-  .buy-btn {
-    width: 150px;
-    padding: 10px;
-    color: white;
-    font-weight: bold;
-    font-size: 16px;
-    border-radius: 4px;
-    background-color: #e8af01;
   }
 
   .price {
@@ -180,6 +186,20 @@
 
   .mobile-only {
     display: none;
+  }
+
+  .sub-merchant-id {
+    margin: 8px 0px;
+  }
+
+  .sub-merchant-id span {
+    font-size: 12px;
+  }
+
+  .sub-merchant-id input {
+    border: 1px solid gray;
+    border-radius: 4px;
+    padding: 4px;
   }
 
   @keyframes spin {

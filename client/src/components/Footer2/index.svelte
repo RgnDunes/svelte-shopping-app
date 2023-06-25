@@ -1,3 +1,7 @@
+<script>
+  import { Link } from 'svelte-routing';
+</script>
+
 <footer class="footer-distributed">
   <div class="footer-right">
     <a href="#"><img src="https://tarun-khanna.github.io/linkedin.6923be1d.svg" /></a>
@@ -8,17 +12,9 @@
 
   <div class="footer-left">
     <p class="footer-links">
-      <a class="link-1" href="/home">Home</a>
-
-      <a href="#">Blog</a>
-
-      <a href="#">Pricing</a>
-
-      <a href="#">About</a>
-
-      <a href="#">Faq</a>
-
-      <a href="#">Contact</a>
+      <Link class="link-1" to="home">Home</Link>
+      <span><Link to="/">Standard Checkout</Link></span>
+      <span><Link to="partner">Partner</Link></span>
     </p>
 
     <p>Digital Dukaan &copy; 2022</p>
@@ -62,11 +58,15 @@
     display: inline-block;
     line-height: 1.8;
     text-decoration: none;
-    color: inherit;
+    color: white;
     transition: ease 0.25s;
   }
 
-  .footer-distributed .footer-links a:before {
+  p.footer-links :global(a) {
+    color: white;
+  }
+
+  .footer-distributed .footer-links span:before {
     content: '·';
     font-size: 20px;
     left: 0;

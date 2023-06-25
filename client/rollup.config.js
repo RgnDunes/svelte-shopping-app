@@ -8,6 +8,7 @@ import image from '@rollup/plugin-image';
 import { config } from 'dotenv';
 import replace from '@rollup/plugin-replace';
 const html = require('@rollup/plugin-html');
+import copy from 'rollup-plugin-copy';
 
 const getHtml = () => {
   const basePath = process.env.BASE_PATH ? `/${process.env.BASE_PATH}` : '';
@@ -106,6 +107,10 @@ export default {
     !production && serve(),
     !production && livereload('public'),
     production && terser(),
+    copy({
+      targets: [{ src: 'public/index.html', dest: ['public/partner', 'public/detail'] }],
+      hook: 'writeBundle',
+    }),
   ],
   watch: {
     clearScreen: false,
