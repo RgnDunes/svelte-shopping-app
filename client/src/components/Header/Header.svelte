@@ -1,6 +1,8 @@
 <script>
   import { navigate } from 'svelte-routing';
   export let categories = [];
+  export let onCountryChange;
+  export let showCountryDropdown = false;
   const { env } = process;
   const { BASE_PATH } = env;
 
@@ -18,11 +20,19 @@
     <img class="logo-img" src={`${BASE_PATH ? `/${BASE_PATH}` : ''}/assets/images/logo.svg`} alt="logo-dukaan" />
     <h1 class="logo-text">Dukaan</h1>
   </button>
-  <div class="container category-container">
-    {#each categories as category}
-      <button on:click={() => handleClick(category)} class="category-text">{category}</button>
-    {/each}
-  </div>
+  {#if showCountryDropdown}
+    <select class="country-dropdown" on:change={onCountryChange}>
+      <option value="MY">🇲🇾 Malaysia</option>
+      <option value="SG">🇸🇬 Singapore</option>
+    </select>
+  {/if}
+  {#if categories.length}
+    <div class="container category-container">
+      {#each categories as category}
+        <button on:click={() => handleClick(category)} class="category-text">{category}</button>
+      {/each}
+    </div>
+  {/if}
 </div>
 
 <style>
@@ -53,6 +63,10 @@
 
   .category-text:hover {
     color: var(--primary-color);
+  }
+
+  .country-dropdown {
+    font-size: 16px;
   }
 
   @media only screen and (max-width: 989px) {

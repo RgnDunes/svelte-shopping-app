@@ -2,6 +2,7 @@
   import Header from '../components/Header/Header.svelte';
   import Footer2 from '../components/Footer2/index.svelte';
   import PaymentState, { initiatePayment } from '../components/PaymentState.svelte';
+  import { CONFIG_BY_COUNTRY } from '../utils/constants';
 
   let product = {
     title: 'APPLE iPhone 14 Pro Max (Silver, 1 TB)',
@@ -27,15 +28,21 @@
 
   const handlePayment = () => {
     loading = true;
-    initiatePayment({ price, createOrder: false })
+    initiatePayment({ price, createOrder: false, activeCountry })
       .catch((err) => console.log('error in 1st api=', err))
       .finally(() => (loading = false));
+  };
+
+  let activeCountry = 'MY';
+
+  const handleCountryChange = (ev) => {
+    activeCountry = ev.target.value;
   };
 </script>
 
 <PaymentState />
 <div class="body">
-  <Header />
+  <Header showCountryDropdown onCountryChange={handleCountryChange} />
   <div class="detail-container">
     <div class="d-flex images-container">
       <img class="mobile-only cover-img" src={activeImage} alt="cover-img" />
@@ -58,7 +65,7 @@
       <h3 class="title">{title}</h3>
       <div class="price">
         <p class="price-text">
-          RM <input class="price-text" bind:value={price} />
+          {CONFIG_BY_COUNTRY[activeCountry].currency.display} <input class="price-text" bind:value={price} />
         </p>
       </div>
       <div class="d-flex rating">

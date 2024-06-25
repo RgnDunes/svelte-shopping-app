@@ -1,7 +1,7 @@
 <script context="module">
   import { writable } from 'svelte/store';
   import Modal from './Modal.svelte';
-  import { PAYMENT_STATE } from '../utils/constants';
+  import { CONFIG_BY_COUNTRY, PAYMENT_STATE } from '../utils/constants';
   import successIcon from '../assets/images/success.svg';
   export const paymentState = writable({});
 
@@ -15,13 +15,16 @@
     createOrder = true,
     key = RAZORPAY_KEY_ID,
     extraOptions = {},
+    activeCountry = 'MY',
   }) => {
     // if (false) {
     //   orderPayload.line_items_total = price;
     // }
 
+    const currency = CONFIG_BY_COUNTRY[activeCountry].currency.code;
+
     const options = {
-      currency: 'MYR',
+      currency,
       name: 'Digital Dukaan',
       description: 'Test Transaction',
       image: `${BASE_PATH ? `/${BASE_PATH}` : ''}/assets/images/logo.svg`,
@@ -59,7 +62,7 @@
 
     if (createOrder) {
       const orderPayload = {
-        currency: 'MYR',
+        currency,
         amount: price,
       };
       const orderData = await fetch(`${API_ENDPOINT}/payment/orders`, {
@@ -75,7 +78,7 @@
 
       options.order_id = id;
     } else {
-      options.key = key;
+      options.key = CONFIG_BY_COUNTRY[activeCountry].key;
       options.amount = price * 100;
     }
 
